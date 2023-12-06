@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Areas</title>
+
+    <!-- fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- normalize (utilizado para responsividade) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" 
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- importar aquivos css -->
+    <link rel="stylesheet" href="../static/style/global.css" >
+    <link rel="stylesheet" href="../static/style/cabecalho.css" >
+    <link rel="stylesheet" href="../static/style/menuPortal.css" >
+
+</head>
+
+<body>
+    <div class="principal">
+        <header class="cabecalho">
+            <img src="../static/imgs/logo.png" class="imagem">
+
+            <div class="texto">
+                <h1 class="titulo">Cadastro de Áreas</h1>
+            </div>
+        </header>
+        <form method="post" action="#" id="uploadForm" enctype="multipart/form-data">
+            <div class="campos">
+
+                <!-- secao cadatro area -->
+                <h2 class="subtitulo">Dados da nova área</h2>
+                <hr width="100%" noshade="">
+                <label for="codigo">Código da área e/ou equipamento*:</label><br>
+                <input type="text" name="codigo" placeholder="Digite o código" ><br><br>
+                <label for="descricao">Descrição da área ou equipamento*:</label><br>
+                <input type="text" name="descricao" placeholder="Digite a descrição" ><br><br>
+                <label for="status">Status da liberação*:</label>
+                <select name="status" placeholder="Escolher..." >
+                    <option value="" disabled selected>Escolher...</option>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select></p> 
+    
+                <!-- secao anexos -->
+                <h2 class="subtitulo">Anexos</h2>
+                <hr width="100%" noshade="">
+                <label for="anexo">Anexo*:</label>
+                <input type="file" name="anexo" accept=".pdf" ><br>
+                
+                <input type="submit" value="Enviar">
+            </form>
+
+    </div>
+    
+</body>
+
+</html>

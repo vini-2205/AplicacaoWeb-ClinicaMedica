@@ -1,0 +1,12 @@
+#end-numero {
+    width: 30%;
+}
+
+.botao-add {
+    border-radius: 0 solid rgb(20, 98, 62);
+    background-color: rgb(25 135 84);
+    color: #fff;
+    padding-right: .5rem;
+    padding-left: .5rem;
+    border-radius: 5px;
+}
