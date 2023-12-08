@@ -24,28 +24,35 @@
 </head>
 
 <body>
-    <div class="principal">
-        <header class="cabecalho">
+    <header class="cabecalho">
+        <a href="/">
             <img src="../static/imgs/logo.png" class="imagem">
+        </a>
+        <nav class="itens"> <!-- Barra de navegação responsiva -->
+            <a href="/" class="nav-link">Home</a>
 
-            <div class="texto">
-                <h1 class="titulo">Cadastro de Endereço</h1>
-            </div>
-        </header>
+            <a href="#" class="nav-link">Fotos</a>
+
+            <a href="/cadastrar-endereco" class="nav-link">Endereços</a>
+
+            <a href="#" class="nav-link">Consultas</a>
+            </nav>
+    </header>
+        <div class="principal">
         <form method="post" action="#" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
                 <h2 class="subtitulo">Insira um novo endereço:</h2>
                 <hr width="100%" noshade="">
                 <label for="logradouro">Logradouro*:</label><br>
-                <input type="text" name="logradouro" placeholder="Digite o logradouro" ><br><br>
+                <input type="text" name="logradouro" autocomplete="off" placeholder="Digite o logradouro" ><br><br>
                 <label for="bairro">Bairro*:</label><br>
-                <input type="text" name="bairro" placeholder="Digite o bairro" ><br><br>
+                <input type="text" name="bairro" autocomplete="off" placeholder="Digite o bairro" ><br><br>
                 <label for="cep">CEP*:</label>
-                <input type="number" name="cep" placeholder="Digite o CEP" ><br><br>
+                <input type="number" name="cep" autocomplete="off" placeholder="Digite o CEP" ><br><br>
                 <label for="cidade">Cidade*:</label><br>
-                <input type="text" name="cidade" placeholder="Digite a cidade" ><br><br>
+                <input type="text" name="cidade" autocomplete="off" placeholder="Digite a cidade" ><br><br>
                 <label for="estado">Estado*:</label><br>
-                <input type="text" name="estado" placeholder="Digite o estado" ><br><br>              
+                <input type="text" name="estado" autocomplete="off" placeholder="Digite o estado" ><br><br>              
             </div>
             <input type="submit" value="Enviar">
         </form>

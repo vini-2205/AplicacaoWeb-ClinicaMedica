@@ -27,6 +27,7 @@ h1 {
 }
 
 h2 {
+  margin-top: 3rem;
   margin-left: .7rem;
 }
 
@@ -98,6 +99,10 @@ input[type="submit"] {
     width: 30%;
     display: block; 
     margin: 0 auto;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
