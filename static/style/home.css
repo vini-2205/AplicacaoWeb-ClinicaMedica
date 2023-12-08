@@ -1,0 +1,11 @@
+h2:first-of-type {
+    text-align: center;
+}
+
+.foto-clinica {
+    width: 300px;
+    height: auto;
+    border: 2px solid #333;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px #888;
+  }
