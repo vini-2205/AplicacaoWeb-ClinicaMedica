@@ -1,5 +1,7 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask import Flask, jsonify
+from flask_login import LoginManager, UserMixin, login_user
+from flask_login import login_required, login_user, current_user, logout_user
 #from PyPDF2 import PdfReader, PdfWriter
 from werkzeug.utils import secure_filename
 import os
@@ -11,15 +13,24 @@ import pyautogui as pg
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static\\arquivos\\candidato'
+app.config['SECRET_KEY'] = '123456'
+login_manager = LoginManager(app)
+
+
 
 n=0
+
+
+class Usuario(UserMixin):
+    def __init__(self, user_id, email):
+        self.id = user_id
+        self.email = email
 
 
 # Rota de GET para renderizar a página de cadastro
 @app.route('/')
 def index_cadastro():
-        return render_template('Home.html')
-
+    return render_template('Home.html')
         
 # Renderizar página de reports
 @app.route('/reports')
@@ -66,27 +77,35 @@ def report():
 # Renderizar página de login
 @app.route('/login')
 def index_login():
-     return render_template('login.html')
+    return render_template('login.html')
 
 # Verificar log
 @app.route('/login', methods=['POST'])
-def logar():
-    cpf = request.form['cpf']
-    senha = request.form['password']
 
-    query = "SELECT * FROM USUARIO WHERE cpf = %s"
-    values = (cpf,)
+def logar():
+    email = request.form['email']
+    senhahash = request.form['senhahash']
+
+    query = "SELECT * FROM FUNCIONARIO WHERE email = %s"
+    valores_usuario = (email,)
 
     cursor = connection.cursor(dictionary=True)
-    cursor.execute(query, values)
+    cursor.execute(query, valores_usuario)
     user = cursor.fetchone()
 
-    if user and user['senha'] == senha:
-        # Autenticação bem-sucedida
-        return jsonify({'message': 'Login bem-sucedido'})
+    if user and user['senhahash'] == senhahash:
+        usuario = Usuario(user['senhahash'], user['email'])
+        login_user(usuario)
+        return redirect(url_for('portal_interno'))
     else:
         # Autenticação falhou
         return jsonify({'message': 'CPF ou senha incorretos'}), 401
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 # Renderizando a página de registro
 @app.route('/register')
@@ -96,18 +115,51 @@ def index_registrar():
 # Registrar um usuário
 @app.route('/register', methods=['POST'])
 def registrar():
-    cpf = request.form['cpf']
-    senha = request.form['password']
+    email = request.form['email']
+    senhahash = request.form['senhahash']
 
-    query = "INSERT INTO USUARIO (cpf, senha) VALUES (%s, %s)"
+    consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM FUNCIONARIO"
+    query = "INSERT INTO FUNCIONARIO (email, senha, codigo) VALUES (%s, %s, %s)"
      
-    values = (cpf, senha)
-
     cursor = connection.cursor()
-    cursor.execute(query, values)
+    cursor.execute(consulta_proximo_codigo)
+    proximo_codigo = cursor.fetchone()['proximo_codigo']
+    valores_usuario = (email, senhahash, proximo_codigo)
+    cursor.execute(query, valores_usuario)
     connection.commit()
     
     return index_login() # Redirecionando para o login
+
+
+@app.route('/portal_interno')
+@login_required
+def portal_interno():
+    # Acesso permitido apenas para usuários autenticados
+    return render_template('portal_interno.html')
+
+
+# Renderizando a página de registro
+@app.route('/cadastrar-endereco')
+def index_cadastrarEndereco():
+     return render_template('cadastrar-endereco.html')
+
+# Registrar um usuário
+@app.route('/cadastrar-endereco', methods=['POST'])
+def registrar():
+    cep = request.form['cep']
+    logradouro = request.form['logradouro']
+    bairro = request.form['bairro']
+    cidade = request.form['cidade']
+    estado = request.form['estado']
+
+    query = "INSERT INTO ENDERECOS (cep, logradouro, bairro, cidade, estado) VALUES (%s, %s, %s, %s, %s)"
+     
+    cursor = connection.cursor()
+    valores_usuario = (cep, logradouro, bairro, cidade, estado)
+    cursor.execute(query, valores_usuario)
+    connection.commit()
+    
+    return index_cadastrarEndereco() # Redirecionando para o login
 
 # Observar os candidatos cadastrados
 @app.route('/visualizarCandidatos')
@@ -118,9 +170,7 @@ def verCandidato():
     candidatos = cursor.fetchall()
     return render_template('visualizarCandidatos.html',candidatos=candidatos)
 
-# def atualizar_status_aprovado(cpf):
-    
-
+# def atualizar_status_aprovado(cpf)://
 @app.route('/visualizarCandidatos', methods=['POST'])
 def index_post_visualizar():
     cpf = request.form['cpf']
