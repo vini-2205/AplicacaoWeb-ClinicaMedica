@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-from flask import Flask, jsonify
 from flask_login import LoginManager, UserMixin, login_user
 from flask_login import login_required, login_user, current_user, logout_user
 #from PyPDF2 import PdfReader, PdfWriter
@@ -13,8 +12,8 @@ import pyautogui as pg
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static\\arquivos\\candidato'
-app.config['SECRET_KEY'] = '123456'
-login_manager = LoginManager(app)
+#app.config['SECRET_KEY'] = '123456'
+#login_manager = LoginManager(app)
 
 
 
@@ -108,13 +107,13 @@ def logout():
     return redirect(url_for('login'))
 
 # Renderizando a página de registro
-@app.route('/register')
-def index_registrar():
-     return render_template('register.html')
+@app.route('/registrar-funcionario')
+def index_registrarFuncionario():
+     return render_template('registrar-funcionario.html')
 
 # Registrar um usuário
-@app.route('/register', methods=['POST'])
-def registrar():
+@app.route('/registrar-funcionario', methods=['POST'])
+def registrarFuncionario():
     email = request.form['email']
     senhahash = request.form['senhahash']
 
@@ -145,7 +144,7 @@ def index_cadastrarEndereco():
 
 # Registrar um usuário
 @app.route('/cadastrar-endereco', methods=['POST'])
-def registrar():
+def cadastrarEndereco():
     cep = request.form['cep']
     logradouro = request.form['logradouro']
     bairro = request.form['bairro']
