@@ -7,9 +7,7 @@ body {
 
     font-family: 'Poppins', sans-serif;
 
-    background: /*url(../imgs/fundo-login.jpg) no-repeat center center fixed,*/ /* Adiciona "no-repeat" para evitar repetição */
-                url(../imgs/ruido.png),
-                linear-gradient(50deg, #033268, #00e1ff);
+    background: url(../imgs/ruido.png), linear-gradient(50deg, #033268, #00e1ff);
     background-size: cover; /* Faz a imagem cobrir toda a tela */
 }
 
