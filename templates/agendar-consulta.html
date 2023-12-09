@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Endereco</title>
+    <title>Agendamento de Consultas</title>
 
     <!-- fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,23 +36,27 @@
             <a href="/cadastrar-endereco" class="nav-link">Endereços</a>
 
             <a href="#" class="nav-link">Consultas</a>
-          </nav>
+            </nav>
     </header>
     <div class="principal">
-        <form method="post" action="/cadastrar-endereco" id="uploadForm" enctype="multipart/form-data">
+        <form method="post" action="/agendar consulta" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
-                <h2 class="subtitulo">Cadastro de Endereço:</h2>
+                <h2 class="subtitulo">Agendamento de Consulta:</h2>
                 <hr width="100%" noshade="">
-                <label for="logradouro">Logradouro*:</label><br>
-                <input type="text" name="logradouro" autocomplete="off" placeholder="Ex: Rua Santa Rita Durão 29" ><br><br>
-                <label for="bairro">Bairro*:</label><br>
-                <input type="text" name="bairro" autocomplete="off" placeholder="Ex: Savassi" ><br><br>
-                <label for="cep">CEP*:</label>
-                <input type="number" name="cep" autocomplete="off" placeholder="Ex: 30100200" ><br><br>
-                <label for="cidade">Cidade*:</label><br>
-                <input type="text" name="cidade" autocomplete="off" placeholder="Ex: Belo Horizonte" ><br><br>
-                <label for="estado">Estado*:</label><br>
-                <input type="text" name="estado" autocomplete="off" placeholder="Ex: Minas Gerais" ><br><br>             
+                <label for="especialidade">Especialidade médica desejada*:</label><br>
+                <select name="especialidade" placeholder="Escolher..." >
+                    <option value="" disabled selected>Escolher...</option>
+                </select></p>
+                <label for="medico">Nome do médico especialista*:</label><br>
+                <select name="medico" placeholder="Escolher..." >
+                    <option value="" disabled selected>Escolher...</option>
+                </select></p>  
+                <label for="data">Data da consulta:</label>
+                <input type="date" name="data"></p>  
+                <label for="horario">Horário da consulta*:</label><br>
+                <select name="horario" placeholder="Escolher..." >
+                    <option value="" disabled selected>Escolher...</option>
+                </select></p>           
             </div>
             <input type="submit" value="Enviar">
         </form>

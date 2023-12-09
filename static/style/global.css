@@ -84,25 +84,38 @@ input[type="file"] {
 }
 
 input[type="submit"] {
-    background-color: rgb(51 102 255);
-}
-
-#possui-parente{
-    background-color: #fff;
-    color: rgb(35, 34, 34);
-    margin-bottom: 5rem;
-    padding: .2rem;
-    border-radius: 5px;
-}
-
-input[type="submit"] {
+    background-color: rgb(43, 85, 212);
     width: 30%;
     display: block; 
     margin: 0 auto;
 }
 
 input[type="submit"]:hover {
-    cursor: pointer;
+  cursor: pointer;
+  
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.toggle {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1.5rem;
+}
+
+#toggleButton {
+  width: 20px;
+  margin-right: .7rem;
+}
+
+#possui-parente {
+    background-color: #fff;
+    color: rgb(35, 34, 34);
+    margin-bottom: 5rem;
+    padding: .2rem;
+    border-radius: 5px;
 }
 
 @media screen and (max-width: 768px) {

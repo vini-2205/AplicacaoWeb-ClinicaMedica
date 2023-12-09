@@ -4,9 +4,7 @@ body {
     height: 100vh;
     width: 100%;
     position: relative;
-
     font-family: 'Poppins', sans-serif;
-
     background: url(../imgs/ruido.png), linear-gradient(50deg, #033268, #00e1ff);
     background-size: cover; 
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Endereco</title>
+    <title>Cadastro de Funcionario</title>
 
     <!-- fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,16 +33,22 @@
 
             <a href="#" class="nav-link">Fotos</a>
 
-            <a href="/cadastrar-endereco" class="nav-link">Endereços</a>
+            <a href="/cadastrar-funcionario" class="nav-link">Endereços</a>
 
             <a href="#" class="nav-link">Consultas</a>
-          </nav>
+            </nav>
     </header>
     <div class="principal">
-        <form method="post" action="/cadastrar-endereco" id="uploadForm" enctype="multipart/form-data">
+        <form method="post" action="/cadastrar funcionario" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
-                <h2 class="subtitulo">Cadastro de Endereço:</h2>
+                <h2 class="subtitulo">Cadastro de Funcionário:</h2>
                 <hr width="100%" noshade="">
+                <label for="funcionario">Nome completo*:</label><br>
+                <input type="text" name="funcionario" autocomplete="off" placeholder="Ex: Lucas Santos Rodrigues" ><br><br>
+                <label for="email">Email*:</label><br>
+                <input type="text" name="email" autocomplete="off" placeholder="Ex: lucasantos@gmail.com" ><br><br>
+                <label for="telefone">Telefone*:</label><br>
+                <input type="text" name="telefone" autocomplete="off" placeholder="Ex: (31) 99999-9999" ><br><br>
                 <label for="logradouro">Logradouro*:</label><br>
                 <input type="text" name="logradouro" autocomplete="off" placeholder="Ex: Rua Santa Rita Durão 29" ><br><br>
                 <label for="bairro">Bairro*:</label><br>
@@ -52,7 +58,22 @@
                 <label for="cidade">Cidade*:</label><br>
                 <input type="text" name="cidade" autocomplete="off" placeholder="Ex: Belo Horizonte" ><br><br>
                 <label for="estado">Estado*:</label><br>
-                <input type="text" name="estado" autocomplete="off" placeholder="Ex: Minas Gerais" ><br><br>             
+                <input type="text" name="estado" autocomplete="off" placeholder="Ex: Minas Gerais" ><br><br>
+                <label for="contrato">Data de início do contrato:</label>
+                <input type="date" name="contrato"></p>  
+                <label for="salario">Salário*:</label><br>
+                <input type="number" name="salario" autocomplete="off" placeholder="Ex: 12000,00" ><br><br>
+                <label for="senha">Senha*:</label><br>
+                <input type="text" name="senha" autocomplete="off" placeholder="Ex: iug2h38" ><br><br>
+                <hr width="100%" noshade="">
+                <label class="toggle">
+                    <input type="checkbox" id="toggleButton">
+                    <label for="funcionario">Funcionário médico?*:</label>
+                </label>
+                <label for="especialidade">Especialidade*:</label><br>
+                <input type="text" name="especialidade" autocomplete="off" placeholder="Ex: Oftalmologista" ><br><br>
+                <label for="crm">CRM*:</label><br>
+                <input type="text" name="crm" autocomplete="off" placeholder="Ex: CRM/MG 123456" ><br><br>
             </div>
             <input type="submit" value="Enviar">
         </form>

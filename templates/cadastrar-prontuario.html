@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Endereco</title>
+    <title>Cadastro de Prontuario</title>
 
     <!-- fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,26 +33,24 @@
 
             <a href="#" class="nav-link">Fotos</a>
 
-            <a href="/cadastrar-endereco" class="nav-link">Endereços</a>
+            <a href="/cadastrar-prontuario" class="nav-link">Endereços</a>
 
             <a href="#" class="nav-link">Consultas</a>
           </nav>
     </header>
     <div class="principal">
-        <form method="post" action="/cadastrar-endereco" id="uploadForm" enctype="multipart/form-data">
+        <form method="post" action="/cadastrar-prontuario" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
-                <h2 class="subtitulo">Cadastro de Endereço:</h2>
+                <h2 class="subtitulo">Cadastro de Prontuário Eletrônico do Paciente:</h2>
                 <hr width="100%" noshade="">
-                <label for="logradouro">Logradouro*:</label><br>
-                <input type="text" name="logradouro" autocomplete="off" placeholder="Ex: Rua Santa Rita Durão 29" ><br><br>
-                <label for="bairro">Bairro*:</label><br>
-                <input type="text" name="bairro" autocomplete="off" placeholder="Ex: Savassi" ><br><br>
-                <label for="cep">CEP*:</label>
-                <input type="number" name="cep" autocomplete="off" placeholder="Ex: 30100200" ><br><br>
-                <label for="cidade">Cidade*:</label><br>
-                <input type="text" name="cidade" autocomplete="off" placeholder="Ex: Belo Horizonte" ><br><br>
-                <label for="estado">Estado*:</label><br>
-                <input type="text" name="estado" autocomplete="off" placeholder="Ex: Minas Gerais" ><br><br>             
+                <label for="anamnese">Registro de anamnese, exame objetivo e variáveis clínicas*:</label><br>
+                <input type="text" name="anamnese" autocomplete="off" placeholder="Digite a avaliação médica" ><br><br>
+                <label for="medicamento">Prescrição de medicamentos/métodos terapêuticos*:</label><br>
+                <input type="text" name="medicamentos" autocomplete="off" placeholder="Digite a prescrição" ><br><br>
+                <label for="atestado">Emissão de atestados/documentos clínicos*:</label>
+                <input type="text" name="atestado" autocomplete="off" placeholder="Digite o atestado" ><br><br>
+                <label for="exame">Solicitação de exames/métodos diagnósticos complementares*:</label><br>
+                <input type="text" name="exame" autocomplete="off" placeholder="Digite a solicitação de exame" ><br><br>            
             </div>
             <input type="submit" value="Enviar">
         </form>
