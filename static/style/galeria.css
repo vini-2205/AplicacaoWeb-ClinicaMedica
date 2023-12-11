@@ -1,0 +1,35 @@
+#galeria {
+    margin: 0 auto;
+  }
+  
+  #galeria, #slide {
+    width: 400px;
+    height: 300px;
+  }
+  
+  #slide {
+    border: 1px solid gray;
+  }
+  
+  .controle {
+    width: 150px;
+    height: 45px;
+    padding: 6px 10px;
+    border: 1px solid #999;
+    background-image: linear-gradient(to bottom, #ddf, #bbe);
+    transition: all 100ms ease-out;
+  }
+  .controle:hover {
+    border-color: #aaa;
+    background-image: linear-gradient(to bottom, #eef, #ccf);
+    font-size: 120%;
+    cursor: pointer;
+  }
+  
+  #anterior {
+    float: left;
+  }
+  
+  #proximo {
+    float: right;
+  }
