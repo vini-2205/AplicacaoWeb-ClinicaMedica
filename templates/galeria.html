@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Funcionario</title>
+    <title>Galeria</title>
 
     <!-- fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +19,7 @@
     <!-- importar aquivos css -->
     <link rel="stylesheet" href="../static/style/global.css" >
     <link rel="stylesheet" href="../static/style/cabecalho.css" >
+    <link rel="stylesheet" href="../static/style/galeria.css" >
 
 </head>
 
@@ -32,22 +33,27 @@
 
             <a href="#" class="nav-link">Fotos</a>
 
-            <a href="/cadastrar-funcionario" class="nav-link">Endereços</a>
+            <a href="/galeria" class="nav-link">Endereços</a>
 
             <a href="#" class="nav-link">Consultas</a>
-            </nav>
+
+            <a href="#" class="nav-link">Login</a>
+        </nav>
     </header>
     <div class="principal">
+        <h2 class="subtitulo">Galeria de Imagens:</h2>
+        <hr width="100%" noshade="">
         <div id="galeria">
-            <img id="slide" src="../static/imgs/galeria1.jpg">
+            <div id="slide-container">
+                <img id="slide" src="../static/imgs/galeria1.jpg" width="400" height="300">
+            </div>
             <button id="anterior" class="controle">Anterior</button>
             <button id="proximo" class="controle">Próximo</button>
         </div>
     </div>
 
     <!-- importar arquivos js -->
-    <!-- <script type="text/javascript" src="../static/dependente.js"></script>     -->
-    <script type="text/javascript" src="../static/inputDinamico.js"></script>    
+    <script type="text/javascript" src="../static/galeria.js"></script>    
     
 </body>
 

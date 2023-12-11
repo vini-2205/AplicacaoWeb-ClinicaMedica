@@ -83,7 +83,7 @@ input[type="file"] {
     margin-bottom: 1rem;
 }
 
-input[type="submit"] {
+input[type="submit"], .controle {
     display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
@@ -137,7 +137,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transition: background-color 0.3s ease;
 }
 
-.redirect-button:hover, input[type="submit"]:hover {
+.redirect-button:hover, input[type="submit"]:hover, .controle:hover {
   background-color: #063956;
   cursor: pointer;
 }
