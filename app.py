@@ -107,27 +107,72 @@ def logout():
     return redirect(url_for('login'))
 
 # Renderizando a página de registro
-@app.route('/registrar-funcionario')
-def index_registrarFuncionario():
-     return render_template('registrar-funcionario.html')
+@app.route('/cadastrar-funcionario')
+def index_cadastrarFuncionario():
+     return render_template('cadastrar-funcionario.html')
 
 # Registrar um usuário
-@app.route('/registrar-funcionario', methods=['POST'])
-def registrarFuncionario():
+@app.route('/cadastrar-funcionario', methods=['POST'])
+def cadastrarFuncionario():
     email = request.form['email']
     senhahash = request.form['senhahash']
+    cep = request.form['cep']
+    logradouro = request.form['logradouro']
+    bairro = request.form['bairro']
+    cidade = request.form['cidade']
+    estado = request.form['estado']
+    contrato = request.form['contrato']
+    salario = request.form['salario']
+    funcionario = request.form['funcionario']
+    telefone = request.form['telefone']
+    especialidade = request.form['especialidade']
+    crm = request.form['crm']
+    
 
     consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM FUNCIONARIO"
-    query = "INSERT INTO FUNCIONARIO (email, senha, codigo) VALUES (%s, %s, %s)"
+    query = "INSERT INTO FUNCIONARIO (email, senhahash, codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone, especialidade, crm) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s, %s, %s)"
+    
      
     cursor = connection.cursor()
     cursor.execute(consulta_proximo_codigo)
     proximo_codigo = cursor.fetchone()['proximo_codigo']
-    valores_usuario = (email, senhahash, proximo_codigo)
+    valores_usuario = (email, senhahash, proximo_codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone, especialidade, crm)
     cursor.execute(query, valores_usuario)
+
     connection.commit()
     
     return index_login() # Redirecionando para o login
+
+
+# Rota para a API que retorna os dados do CEP
+@app.route('/api/busca_cep', methods=['POST'])
+def busca_cep():
+    print("Rota '/api/busca_cep' foi chamada")  # Apenas para debug
+    cep_digitado = request.json['cep']
+    # Conecta ao banco de dados MySQ
+    cursor = connection.cursor()
+    query2 = "SELECT * FROM ENDERECOS WHERE cep = (%s)"
+    valores_usuario2 = (cep_digitado,)
+    cursor.execute(query2, valores_usuario2)    
+    cep_encontrado = cursor.fetchone()
+
+
+    if cep_encontrado:
+        print("Entrou true")  # Apenas para debug
+        # Se o CEP for encontrado, retorna os dados em formato JSON
+        return jsonify({
+            'success': True,
+            'cep': cep_encontrado[0],
+            'bairro': cep_encontrado[2],
+            'logradouro': cep_encontrado[1],
+            'cidade': cep_encontrado[3],
+            'estado': cep_encontrado[4]
+        })
+    else:
+        # Se o CEP não for encontrado, retorna uma mensagem de erro
+        print("Entrou false")  # Apenas para debug
+        return jsonify({'success': False, 'message': 'CEP não encontrado'})
+
 
 
 @app.route('/portal_interno')
@@ -159,6 +204,33 @@ def cadastrarEndereco():
     connection.commit()
     
     return index_cadastrarEndereco() # Redirecionando para o login
+
+@app.route('/listar-funcionarios')
+def listarFuncionarios():
+    cursor = connection.cursor()
+    query = "SELECT funcionario,email,crm,especialidade,telefone,cep,contrato,salario FROM FUNCIONARIO"
+    cursor.execute(query)
+    funcionarios = cursor.fetchall()
+    return render_template('listar-funcionarios.html',funcioanrios=funcionarios)
+
+@app.route('/listar-pacientes')
+def listarPacientes():
+    cursor = connection.cursor()
+    query = "SELECT paciente,email,telefone,cep,peso,altura,tipoSanguineo FROM PACIENTE"
+    cursor.execute(query)
+    pacientes = cursor.fetchall()
+    return render_template('listar-pacientes.html',pacientes=pacientes)
+
+@app.route('/listar-enderecos')
+def listarEnderecos():
+    cursor = connection.cursor()
+    query = "SELECT cep,logradouro,bairro,cidade,estado FROM ENDERECOS"
+    cursor.execute(query)
+    enderecos = cursor.fetchall()
+    return render_template('listar-enderecos.html',enderecos=enderecos)
+
+
+
 
 # Observar os candidatos cadastrados
 @app.route('/visualizarCandidatos')
