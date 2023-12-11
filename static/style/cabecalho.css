@@ -11,13 +11,13 @@
 .cabecalho .imagem {
     width: 180px;
     height: 120px;
-    margin-left: 210px;
+    margin-left: 2rem;
 }
 
 .cabecalho .itens {
     display: flex;
     align-items: flex-end;
-    margin-right: 195px;
+    margin-right: 2rem;
 }
 
 .cabecalho .itens a {

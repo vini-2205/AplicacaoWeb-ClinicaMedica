@@ -33,10 +33,20 @@
 
             <a href="#" class="nav-link">Fotos</a>
 
-            <a href="/cadastrar-funcionario" class="nav-link">Endereços</a>
+            <a href="/cadastrar-endereco" class="nav-link">Endereços</a>
 
             <a href="#" class="nav-link">Consultas</a>
-            </nav>
+
+            <a href="#" class="nav-link">Prontuários</a>
+
+            <a href="#" class="nav-link">Cadastro Funcionário</a>
+
+            <a href="#" class="nav-link">Cadastro Paciente</a>
+
+            <a href="#" class="nav-link">Listagens</a>
+
+            <a href="#" class="nav-link">Login</a>
+        </nav>
     </header>
     <div class="principal">
         <form method="post" action="/cadastrar-funcionario" id="uploadForm" enctype="multipart/form-data">
@@ -71,10 +81,12 @@
                     <input type="checkbox" id="toggleButton">
                     <label for="funcionario">Funcionário médico?*:</label>
                 </label>
-                <label for="especialidade">Especialidade*:</label><br>
-                <input type="text" name="especialidade" autocomplete="off" placeholder="Ex: Oftalmologista" ><br><br>
-                <label for="crm">CRM*:</label><br>
-                <input type="text" name="crm" autocomplete="off" placeholder="Ex: CRM/MG 123456" ><br><br>
+                <div id="campos" class="oculto">
+                    <label for="especialidade">Especialidade*:</label><br>
+                    <input type="text" name="especialidade" autocomplete="off" placeholder="Ex: Oftalmologista" ><br><br>
+                    <label for="crm">CRM*:</label><br>
+                    <input type="text" name="crm" autocomplete="off" placeholder="Ex: CRM/MG 123456" ><br><br>
+                </div>
             </div>
             <input type="submit" value="Enviar">
         </form>

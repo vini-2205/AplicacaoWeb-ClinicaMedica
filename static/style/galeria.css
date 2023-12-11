@@ -1,0 +1,21 @@
+#galeria {
+    margin: 0 auto;
+    margin-top: 5rem;
+}
+
+#galeria, #slide {
+    width: 400px;
+    height: 300px;
+}
+
+#slide {
+    border: 1px solid gray;
+}
+
+#anterior {
+    float: left;
+}
+
+#proximo {
+    float: right;
+}
