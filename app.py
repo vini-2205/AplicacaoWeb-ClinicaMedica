@@ -115,7 +115,7 @@ def index_cadastrarFuncionario():
 @app.route('/cadastrar-funcionario', methods=['POST'])
 def cadastrarFuncionario():
     email = request.form['email']
-    senhahash = request.form['senhahash']
+    senhahash = request.form['senha']
     cep = request.form['cep']
     logradouro = request.form['logradouro']
     bairro = request.form['bairro']
@@ -125,18 +125,16 @@ def cadastrarFuncionario():
     salario = request.form['salario']
     funcionario = request.form['funcionario']
     telefone = request.form['telefone']
-    especialidade = request.form['especialidade']
-    crm = request.form['crm']
-    
 
     consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM FUNCIONARIO"
-    query = "INSERT INTO FUNCIONARIO (email, senhahash, codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone, especialidade, crm) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s, %s, %s)"
+    query = "INSERT INTO FUNCIONARIO (email, senhahash, codigo, cep, logradouro, bairro, cidade, estado, datacontrato, salario, nomeCompleto, telefone) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s)"
     
      
     cursor = connection.cursor()
     cursor.execute(consulta_proximo_codigo)
-    proximo_codigo = cursor.fetchone()['proximo_codigo']
-    valores_usuario = (email, senhahash, proximo_codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone, especialidade, crm)
+    proximo_codigo = cursor.fetchone()[0]
+    print('Proximo codigo: ', proximo_codigo)
+    valores_usuario = (email, senhahash, proximo_codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone)
     cursor.execute(query, valores_usuario)
 
     connection.commit()
@@ -144,10 +142,44 @@ def cadastrarFuncionario():
     return index_login() # Redirecionando para o login
 
 
+# Renderizando a página de registro
+@app.route('/cadastrar-paciente')
+def index_cadastrarPaciente():
+     return render_template('cadastrar-paciente.html')
+
+# Registrar um usuário
+@app.route('/cadastrar-paciente', methods=['POST'])
+def cadastrarPaciente():
+    paciente = request.form['paciente']
+    email = request.form['email']
+    telefone = request.form['telefone']
+    cep = request.form['cep']
+    logradouro = request.form['logradouro']
+    bairro = request.form['bairro']
+    cidade = request.form['cidade']
+    estado = request.form['estado']
+    peso = request.form['peso']
+    altura = request.form['altura']
+    tipoSanguineo = request.form['tipoSanguineo']
+
+    consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM PACIENTE"
+    query = "INSERT INTO PACIENTE (email, telefone, codigo, cep, logradouro, bairro, cidade, estado, peso, altura, nomeCompleto, tipoSanguineo) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s)"
+    
+     
+    cursor = connection.cursor()
+    cursor.execute(consulta_proximo_codigo)
+    proximo_codigo = cursor.fetchone()[0]
+    print('Proximo codigo: ', proximo_codigo)
+    valores_usuario = (email, telefone, proximo_codigo, cep, logradouro, bairro, cidade, estado, peso, altura, paciente, tipoSanguineo)
+    cursor.execute(query, valores_usuario)
+
+    connection.commit()
+    
+    return index_login() # Redirecionando para o login
+
 # Rota para a API que retorna os dados do CEP
 @app.route('/api/busca_cep', methods=['POST'])
 def busca_cep():
-    print("Rota '/api/busca_cep' foi chamada")  # Apenas para debug
     cep_digitado = request.json['cep']
     # Conecta ao banco de dados MySQ
     cursor = connection.cursor()
@@ -158,7 +190,6 @@ def busca_cep():
 
 
     if cep_encontrado:
-        print("Entrou true")  # Apenas para debug
         # Se o CEP for encontrado, retorna os dados em formato JSON
         return jsonify({
             'success': True,
