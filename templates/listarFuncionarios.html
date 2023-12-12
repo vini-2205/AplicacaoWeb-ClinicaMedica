@@ -51,13 +51,16 @@
 
     {% for funcionario in funcionarios %} <!-- percorre todos as areas e equipamentos enviados no array e exibe na tela -->
     <div class="principal">
-        <p><label>Código: &nbsp;</label>{{ area[0] }}<br></p>
         <form action="/listarFuncionarios" method="post">
-            <input type="hidden" name="codigoArea" value="{{ area[0] }}">
-            <input type="hidden" name="descArea" value="{{ area[1] }}">
-            <input type="hidden" name="statusLiberacao" value="{{ area[2] }}">
-            <input type="hidden" name="caminhoAnexo" value="{{ area[3] }}">
-            <input type="submit" value="Consultar">
+            <input type="hidden" name="datacontrato" value="{{ funcionario[0] }}">
+            <input type="hidden" name="salario" value="{{ funcionario[1] }}">
+            <input type="hidden" name="senhahash" value="{{ funcionario[2] }}">
+            <input type="hidden" name="codigo" value="{{ funcionario[3] }}">
+            <input type="hidden" name="nomeCompleto" value="{{ funcionario[4] }}">
+            <input type="hidden" name="email" value="{{ funcionario[5] }}">
+            <input type="hidden" name="telefone" value="{{ funcionario[6] }}">
+            <input type="hidden" name="logradouro" value="{{ funcionario[7] }}">
+            <input type="hidden" name="bairro" value="{{ funcionario[8] }}">
         </form>
     </div>
     {% endfor %}
