@@ -16,9 +16,9 @@
 
 .cabecalho .itens {
     display: flex;
-    align-items: flex-end;
     margin-right: 2rem;
-    
+    align-items: center; 
+    justify-content: end;
 }
 
 .cabecalho .itens a {
@@ -28,23 +28,5 @@
     font-size: 1.4rem;
     margin-right: 15px;
     margin-left: 15px;
-}
-
-@media only screen and (min-width: 768px) {
-    /* .cabecalho {
-        padding: 15px 80px;
-    }
-
-    .cabecalho .imagem {
-        width: 180px;
-        height: 120px;
-    }
-
-    .cabecalho .itens {
-        align-items: flex-end;
-    }
-
-    .cabecalho .itens a {
-        margin-right: 20px;
-    } */
+    margin: 0 15px;
 }
