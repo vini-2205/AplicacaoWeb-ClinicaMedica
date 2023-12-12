@@ -50,23 +50,45 @@
     
     <!-- percorre todos as areas e equipamentos enviados no array e exibe na tela -->
     <div class="principal">
-        {% for funcionario in funcionarios %}
-        <form action="/listar-funcionarios" method="post">
-            <div class="container-funcionario">
-                <p><label>Data Contrato: &nbsp;</label>{{ funcionario[0] }}<br></p>
-                <p><label>Salário: &nbsp;</label>{{ funcionario[1] }}<br></p>
-                <p><label>Senha Hash: &nbsp;</label>{{ funcionario[2] }}<br></p>
-                <p><label>Código: &nbsp;</label>{{ funcionario[3] }}<br></p>
-                <p><label>Nome Completo: &nbsp;</label>{{ funcionario[4] }}<br></p>
-                <p><label>Email: &nbsp;</label>{{ funcionario[5] }}<br></p>
-                <p><label>Telefone: &nbsp;</label>{{ funcionario[6] }}<br></p>
-                <p><label>Logradouro: &nbsp;</label>{{ funcionario[7] }}<br></p>
-                <p><label>Bairro: &nbsp;</label>{{ funcionario[8] }}<br></p>
-            </div>
-        </form>
-        {% endfor %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Data de Contrato</th>
+                    <th>Salário</th>
+                    <th>Código</th>
+                    <th>Nome Completo</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Logradouro</th>
+                    <th>Bairro</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>Especialidade</th>
+                    <th>CRM</th>
+                    <th>CEP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dado in dados %}
+                    <tr>
+                        <td>{{ dado[0] }}</td>
+                        <td>{{ dado[1] }}</td>
+                        <td>{{ dado[3] }}</td>
+                        <td>{{ dado[4] }}</td>
+                        <td>{{ dado[5] }}</td>
+                        <td>{{ dado[6] }}</td>
+                        <td>{{ dado[7] }}</td>
+                        <td>{{ dado[8] }}</td>
+                        <td>{{ dado[9] }}</td>
+                        <td>{{ dado[10] }}</td>
+                        <td>{{ dado[11] }}</td>
+                        <td>{{ dado[12] }}</td>
+                        <td>{{ dado[13] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
 
 </body>
 
