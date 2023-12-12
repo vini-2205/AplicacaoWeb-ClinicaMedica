@@ -239,10 +239,11 @@ def cadastrarEndereco():
 @app.route('/listar-funcionarios')
 def listarFuncionarios():
     cursor = connection.cursor()
-    query = "SELECT funcionario,email,crm,especialidade,telefone,cep,contrato,salario FROM FUNCIONARIO"
+    #query = "SELECT funcionario,email,crm,especialidade,telefone,cep,contrato,salario FROM FUNCIONARIO"
+    query = "SELECT * FROM FUNCIONARIO"
     cursor.execute(query)
     funcionarios = cursor.fetchall()
-    return render_template('listar-funcionarios.html',funcioanrios=funcionarios)
+    return render_template('listarFuncionarios.html',funcionarios=funcionarios)
 
 @app.route('/listar-pacientes')
 def listarPacientes():

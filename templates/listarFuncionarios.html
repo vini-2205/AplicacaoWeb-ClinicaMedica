@@ -19,7 +19,6 @@
     <!-- importar aquivos css -->
     <link rel="stylesheet" href="../static/style/global.css" >
     <link rel="stylesheet" href="../static/style/cabecalho.css" >
-    {% comment %} <link rel="stylesheet" href="../static/style/visualizarReports.css" > {% endcomment %}
 
 </head>
 
@@ -48,22 +47,25 @@
             <a href="#" class="nav-link">Login</a>
         </nav>
     </header>
-
-    {% for funcionario in funcionarios %} <!-- percorre todos as areas e equipamentos enviados no array e exibe na tela -->
+    
+    <!-- percorre todos as areas e equipamentos enviados no array e exibe na tela -->
     <div class="principal">
-        <form action="/listarFuncionarios" method="post">
-            <input type="hidden" name="datacontrato" value="{{ funcionario[0] }}">
-            <input type="hidden" name="salario" value="{{ funcionario[1] }}">
-            <input type="hidden" name="senhahash" value="{{ funcionario[2] }}">
-            <input type="hidden" name="codigo" value="{{ funcionario[3] }}">
-            <input type="hidden" name="nomeCompleto" value="{{ funcionario[4] }}">
-            <input type="hidden" name="email" value="{{ funcionario[5] }}">
-            <input type="hidden" name="telefone" value="{{ funcionario[6] }}">
-            <input type="hidden" name="logradouro" value="{{ funcionario[7] }}">
-            <input type="hidden" name="bairro" value="{{ funcionario[8] }}">
+        {% for funcionario in funcionarios %}
+        <form action="/listar-funcionarios" method="post">
+            <div class="container-funcionario">
+                <p><label>Data Contrato: &nbsp;</label>{{ funcionario[0] }}<br></p>
+                <p><label>Salário: &nbsp;</label>{{ funcionario[1] }}<br></p>
+                <p><label>Senha Hash: &nbsp;</label>{{ funcionario[2] }}<br></p>
+                <p><label>Código: &nbsp;</label>{{ funcionario[3] }}<br></p>
+                <p><label>Nome Completo: &nbsp;</label>{{ funcionario[4] }}<br></p>
+                <p><label>Email: &nbsp;</label>{{ funcionario[5] }}<br></p>
+                <p><label>Telefone: &nbsp;</label>{{ funcionario[6] }}<br></p>
+                <p><label>Logradouro: &nbsp;</label>{{ funcionario[7] }}<br></p>
+                <p><label>Bairro: &nbsp;</label>{{ funcionario[8] }}<br></p>
+            </div>
         </form>
+        {% endfor %}
     </div>
-    {% endfor %}
 
 
 </body>
