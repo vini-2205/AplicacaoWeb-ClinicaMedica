@@ -248,7 +248,7 @@ def listarFuncionarios():
 @app.route('/listar-pacientes')
 def listarPacientes():
     cursor = connection.cursor()
-    query = "SELECT paciente,email,telefone,cep,peso,altura,tipoSanguineo FROM PACIENTE"
+    query = "SELECT * FROM PACIENTE"
     cursor.execute(query)
     pacientes = cursor.fetchall()
     return render_template('listar-pacientes.html',pacientes=pacientes)
@@ -256,7 +256,7 @@ def listarPacientes():
 @app.route('/listar-enderecos')
 def listarEnderecos():
     cursor = connection.cursor()
-    query = "SELECT cep,logradouro,bairro,cidade,estado FROM ENDERECOS"
+    query = "SELECT * FROM ENDERECOS"
     cursor.execute(query)
     enderecos = cursor.fetchall()
     return render_template('listar-enderecos.html',enderecos=enderecos)
