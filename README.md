@@ -22,5 +22,7 @@ Para executar, digite no terminal aberto no mesmo diretorio que o 'app.py': flas
 ## Banco de dados
 O dump do banco de dados está neste diretório: 
 
+## Interface
+
 ## Tabelas 
-![Banco de dados]()
+![Banco de dados](https://github.com/vini-2205/Trabalho-ClinicaMedica/blob/main/static/imgs/tabelasBanco.jpeg)
