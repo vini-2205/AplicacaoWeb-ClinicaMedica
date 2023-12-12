@@ -243,7 +243,7 @@ def listarFuncionarios():
     query = "SELECT * FROM FUNCIONARIO"
     cursor.execute(query)
     funcionarios = cursor.fetchall()
-    return render_template('listarFuncionarios.html',funcionarios=funcionarios)
+    return render_template('listar-funcionarios.html',funcionarios=funcionarios)
 
 @app.route('/listar-pacientes')
 def listarPacientes():

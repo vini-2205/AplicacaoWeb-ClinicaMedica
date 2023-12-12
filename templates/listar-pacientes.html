@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar informações</title>
+    <title>Listar Pacientes</title>
 
     <!-- fontes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,8 +19,6 @@
     <!-- importar aquivos css -->
     <link rel="stylesheet" href="../static/style/global.css" >
     <link rel="stylesheet" href="../static/style/cabecalho.css" >
-    <link rel="stylesheet" href="../static/style/cadastro.css" >
-    <link rel="stylesheet" href="../static/style/listagem.css" >
 
 </head>
 
@@ -49,22 +47,46 @@
             <a href="./login.html" class="nav-link">Login</a>
         </nav>
     </header>
-    <div class="principal">
-        <h2 class="subtitulo">Listar informações de:</h2>
-        <hr width="100%" noshade="">
-        <div class="button-container botoes">
-            <a href="./listar-funcionarios.html" class="redirect-button">Funcionários</a>
-            <a href="./listar-pacientes.html" class="redirect-button">Pacientes</a>
-            <a href="./listar-enderecos.html" class="redirect-button">Endereços</a>
-            <a href="" class="redirect-button">Agendamentos</a>
-            <a href="" class="redirect-button">Agendamentos do funcionario</a>
-        </div>
-    </div>
 
-    <!-- importar arquivos js -->
-    <!-- <script type="text/javascript" src="../static/dependente.js"></script>     -->
-    <script type="text/javascript" src="../static/inputDinamico.js"></script>    
+    <h2 class="subtitulo">Listar pacientes</h2>
     
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome Completo</th>
+                <th>Peso</th>
+                <th>Altura</th>
+                <th>Tipo sanguíneo</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>CEP</th>
+                <th>Logradouro</th>
+                <th>Bairro</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+                <tr>
+                    <td>{{ paciente[3] }}</td>
+                    <td>{{ paciente[4] }}</td>
+                    <td>{{ paciente[0] }}</td>
+                    <td>{{ paciente[1] }}</td>
+                    <td>{{ paciente[2] }}</td>
+                    <td>{{ paciente[5] }}</td>
+                    <td>{{ paciente[6] }}</td>
+                    <td>{{ paciente[9] }}</td>
+                    <td>{{ paciente[7] }}</td>
+                    <td>{{ paciente[8] }}</td>
+                    <td>{{ paciente[10] }}</td>
+                    <td>{{ paciente[11] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </body>
 
 </html>
