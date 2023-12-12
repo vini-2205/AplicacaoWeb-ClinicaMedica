@@ -1,12 +1,13 @@
 * {
-    box-sizing: border-box; /* importante para margin e padding */
+    box-sizing: border-box; 
     font-family: 'Roboto', sans-serif;
 }
 
 body {
     background: url(../imgs/ruido.png), linear-gradient(50deg, #033268, #00e1ff);
-    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    background-size: cover;
     color: #ffffff;
+    min-height: 100vh;
 }
 
 .subtitulo {
