@@ -1,20 +1,18 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-from flask_login import LoginManager, UserMixin, login_user
-from flask_login import login_required, login_user, current_user, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, login_user, current_user, logout_user
 #from PyPDF2 import PdfReader, PdfWriter
 from werkzeug.utils import secure_filename
 import os
 from bancoDeDados import connection
 from obter_localizacao import obter_localizacao
-import os
 #import pywhatkit as kt
 import pyautogui as pg
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static\\arquivos\\candidato'
-#app.config['SECRET_KEY'] = '123456'
-#login_manager = LoginManager(app)
-
+app.config['SECRET_KEY'] = '123456'
+login_manager = LoginManager(app)
+login_manager.init_app(app)
 
 
 n=0
@@ -25,94 +23,26 @@ class Usuario(UserMixin):
         self.id = user_id
         self.email = email
 
-
 # Rota de GET para renderizar a página de cadastro
 @app.route('/')
-def index_cadastro():
+def index_home():
     return render_template('Home.html')
+
+@app.route('/galeria')
+def index_galeria():
+    return render_template('galeria.html')
         
-# Renderizar página de reports
-@app.route('/reports')
-def index_reports():
-      return render_template('reports.html')
 
-# Obter informações do formulário de reports
-@app.route('/reports', methods=['POST'])
-def report():
-      nome = request.form['nome']
-      centro_custo = request.form['centro-custo']
-      referencia = request.form['referencia']
-      descricao = request.form['descricao']
-
-      query = "INSERT INTO REPORTS (nome, centro_custo, referencia_atuacao, descricao) \
-        VALUES (%s, %s, %s, %s)"
-      
-      values = (
-            nome, centro_custo, referencia, descricao
-      )
-
-      # Obter localização
-      localizacao = obter_localizacao()
-
-      if localizacao is not None:
-        query = "INSERT INTO REPORTS (nome, centro_custo, referencia_atuacao, descricao, \
-                    pais, estado, cidade) \
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)"
-           
-        cidade = localizacao['cidade']
-        estado = localizacao['estado']
-        pais = localizacao['pais']
-
-        values = (
-            nome, centro_custo, referencia, descricao, pais, estado, cidade
-        )
-
-      cursor = connection.cursor()
-      cursor.execute(query, values)
-      connection.commit()
-
-      return index_reports()
-
-# Renderizar página de login
-@app.route('/login')
-def index_login():
-    return render_template('login.html')
-
-# Verificar log
-@app.route('/login', methods=['POST'])
-
-def logar():
-    email = request.form['email']
-    senhahash = request.form['senhahash']
-
-    query = "SELECT * FROM FUNCIONARIO WHERE email = %s"
-    valores_usuario = (email,)
-
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute(query, valores_usuario)
-    user = cursor.fetchone()
-
-    if user and user['senhahash'] == senhahash:
-        usuario = Usuario(user['senhahash'], user['email'])
-        login_user(usuario)
-        return redirect(url_for('portal_interno'))
-    else:
-        # Autenticação falhou
-        return jsonify({'message': 'CPF ou senha incorretos'}), 401
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
 
 # Renderizando a página de registro
 @app.route('/cadastrar-funcionario')
+@login_required
 def index_cadastrarFuncionario():
      return render_template('cadastrar-funcionario.html')
 
 # Registrar um usuário
 @app.route('/cadastrar-funcionario', methods=['POST'])
+@login_required
 def cadastrarFuncionario():
     email = request.form['email']
     senhahash = request.form['senha']
@@ -125,16 +55,22 @@ def cadastrarFuncionario():
     salario = request.form['salario']
     funcionario = request.form['funcionario']
     telefone = request.form['telefone']
+    especialidade = None
+    crm = None
+
+    if 'especialidade' in request.form:
+        especialidade = request.form['especialidade']
+        crm = request.form['crm']
 
     consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM FUNCIONARIO"
-    query = "INSERT INTO FUNCIONARIO (email, senhahash, codigo, cep, logradouro, bairro, cidade, estado, datacontrato, salario, nomeCompleto, telefone) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s)"
+    query = "INSERT INTO FUNCIONARIO (email, senhahash, codigo, cep, logradouro, bairro, cidade, estado, datacontrato, salario, nomeCompleto, telefone,especialidade, crm) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s, %s,%s,%s)"
     
      
     cursor = connection.cursor()
     cursor.execute(consulta_proximo_codigo)
     proximo_codigo = cursor.fetchone()[0]
     print('Proximo codigo: ', proximo_codigo)
-    valores_usuario = (email, senhahash, proximo_codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone)
+    valores_usuario = (email, senhahash, proximo_codigo, cep, logradouro, bairro, cidade, estado, contrato, salario, funcionario, telefone,especialidade, crm)
     cursor.execute(query, valores_usuario)
 
     connection.commit()
@@ -144,11 +80,13 @@ def cadastrarFuncionario():
 
 # Renderizando a página de registro
 @app.route('/cadastrar-paciente')
+@login_required
 def index_cadastrarPaciente():
      return render_template('cadastrar-paciente.html')
 
 # Registrar um usuário
 @app.route('/cadastrar-paciente', methods=['POST'])
+@login_required
 def cadastrarPaciente():
     paciente = request.form['paciente']
     email = request.form['email']
@@ -175,7 +113,7 @@ def cadastrarPaciente():
 
     connection.commit()
     
-    return index_login() # Redirecionando para o login
+    return redirect(url_for(index_home))
 
 # Rota para a API que retorna os dados do CEP
 @app.route('/api/busca_cep', methods=['POST'])
@@ -203,14 +141,163 @@ def busca_cep():
         # Se o CEP não for encontrado, retorna uma mensagem de erro
         print("Entrou false")  # Apenas para debug
         return jsonify({'success': False, 'message': 'CEP não encontrado'})
+    
+    
+@app.route('/api/busca_medicos', methods=['POST'])
+def busca_medicos():
+    especialidade = request.json['especialidade']
+    # Conecta ao banco de dados MySQ
+    cursor = connection.cursor()
+    query2 = "SELECT nomeCompleto FROM FUNCIONARIO WHERE especialidade = (%s)"
+    valores_usuario2 = (especialidade,)
+    cursor.execute(query2, valores_usuario2)    
+    medicos = cursor.fetchall()
+
+
+    if medicos:
+        # Retorna os nomes dos médicos em formato JSON
+        nomes_medicos = [medico[0] for medico in medicos]
+        return jsonify({
+            'success': True,
+            'medicos': nomes_medicos
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'medicos': []
+        })
+
+@app.route('/api/busca_horario', methods=['POST'])
+def busca_horario():
+    medico = request.json['medico']
+    data = request.json['data']
+    horariosTotais = [8,9,10,11,12,13,14,15,16,17]
+
+    # Conecta ao banco de dados MySQ
+    cursor = connection.cursor()
+    query = "SELECT codigo FROM FUNCIONARIO WHERE nomeCompleto = (%s)"
+    value = (medico,)
+    cursor.execute(query, value)
+    codigo = cursor.fetchone()[0]
+
+
+    query2 = "SELECT horario FROM HorariosDisponiveis WHERE data = (%s) and codMedico = (%s)"
+    valores_usuario2 = (data, codigo,)
+    cursor.execute(query2, valores_usuario2)    
+    horarios = cursor.fetchall()
+    horariosOcupados = [horariosTotais[0] for horariosTotais in horarios]
+    set_horarios_Totais = set(horariosTotais)
+    set_horarios_ocupados = set(horariosOcupados)
+    horarios_disponiveis_final = set_horarios_Totais - set_horarios_ocupados
+
+    horarios_disponiveis_final_lista = list(horarios_disponiveis_final)
+
+
+    if horarios_disponiveis_final_lista:
+
+        return jsonify({
+            'success': True,
+            'horarios': horarios_disponiveis_final_lista
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'horarios': []
+        })
+
+# Renderizando a página de registro
+@app.route('/agendar-consulta')
+def index_agendarConsulta():
+    consulta_especialidade = "SELECT DISTINCT especialidade FROM FUNCIONARIO WHERE especialidade IS NOT NULL AND especialidade <> ''"
+    
+    # Conecta ao banco de dados MySQL
+    cursor = connection.cursor()
+    cursor.execute(consulta_especialidade)    
+    especialidades = [especialidade[0] for especialidade in cursor.fetchall()]
+    return render_template('agendar-consulta.html', especialidades=especialidades)
+
+# Registrar um usuário
+@app.route('/agendar-consulta', methods=['POST'])
+def agendarConsulta():
+    data = request.form['data']
+    horario = request.form['horario']
+    nome = request.form['nome']
+    email = request.form['email']
+    telefone = request.form['telefone']
+    medico = request.form['medico']
+
+    cursor = connection.cursor()
+
+    # Obtendo o código do médico
+    query_codigo_medico = "SELECT codigo FROM FUNCIONARIO WHERE nomeCompleto = (%s)"
+    valores_codigo_medico = (medico,)
+    cursor.execute(query_codigo_medico, valores_codigo_medico)
+    codigoMedico = cursor.fetchone()[0]
+
+    # Obtendo o próximo código para a tabela AGENDA
+    consulta_proximo_codigo = "SELECT COALESCE(MAX(codigo), 0) + 1 AS proximo_codigo FROM AGENDA WHERE codigomedico = (%s)"
+    valores_proximo_codigo = (codigoMedico,)
+    cursor.execute(consulta_proximo_codigo, valores_proximo_codigo)
+    proximo_codigo = cursor.fetchone()[0]
+
+    # Inserindo na tabela AGENDA
+    query_agenda = "INSERT INTO AGENDA (email, telefone, codigo, codigomedico, data, horario, nome) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    valores_agenda = (email, telefone, proximo_codigo, codigoMedico, data, horario, nome)
+    cursor.execute(query_agenda, valores_agenda)
+
+    # Inserindo na tabela HorariosDisponiveis
+    query_horarios_disponiveis = "INSERT INTO HorariosDisponiveis (data, horario, codMedico) VALUES (%s, %s, %s)"
+    valores_horarios_disponiveis = (data, horario, codigoMedico)
+    cursor.execute(query_horarios_disponiveis, valores_horarios_disponiveis)
+
+    # Commitando as alterações no banco de dados
+    connection.commit()
+
+    # Redirecionando para o login
+    return index_login()
 
 
 
-@app.route('/portal_interno')
+
+@app.route('/cadastrar-prontuario')
 @login_required
-def portal_interno():
-    # Acesso permitido apenas para usuários autenticados
-    return render_template('portal_interno.html')
+def index_cadastrarProntuario():
+    consulta_pacientes = "SELECT nomeCompleto FROM PACIENTE"
+    # Conecta ao banco de dados MySQL
+    cursor = connection.cursor()
+    cursor.execute(consulta_pacientes)
+    pacientes = [paciente[0] for paciente in cursor.fetchall()]
+    print(pacientes)
+    return render_template('cadastrar-prontuario.html', pacientes=pacientes)
+
+# Registrar um usuário
+@app.route('/cadastrar-prontuario', methods=['POST'])
+@login_required
+def cadastrarProntuario():
+    paciente = request.form['paciente']
+    anamnese = request.form['anamnese']
+    medicamentos = request.form['medicamentos']
+    atestado = request.form['atestado']
+    exame = request.form['exame']
+
+    cursor = connection.cursor()
+
+    # Obtendo o código do médico
+    query_codigo_paciente = "SELECT codigo FROM PACIENTE WHERE nomeCompleto = (%s)"
+    valores_codigo_paciente = (paciente,)
+    cursor.execute(query_codigo_paciente, valores_codigo_paciente)
+    codigoPaciente = cursor.fetchone()[0]
+
+    # Inserindo na tabela PRONTUARIO
+    query_prontuario = "INSERT INTO PRONTUARIO (codigopaciente, anamnese, medicamentos, atestados, exames) VALUES (%s, %s, %s, %s, %s)"
+    valores_prontuario = (codigoPaciente, anamnese, medicamentos, atestado, exame)
+    cursor.execute(query_prontuario, valores_prontuario)
+
+    # Commitando as alterações no banco de dados
+    connection.commit()
+
+    # Redirecionando para o login
+    return index_login()
 
 
 # Renderizando a página de registro
@@ -237,6 +324,7 @@ def cadastrarEndereco():
     return index_cadastrarEndereco() # Redirecionando para o login
 
 @app.route('/listar-funcionarios')
+@login_required
 def listarFuncionarios():
     cursor = connection.cursor()
     #query = "SELECT funcionario,email,crm,especialidade,telefone,cep,contrato,salario FROM FUNCIONARIO"
@@ -245,7 +333,14 @@ def listarFuncionarios():
     funcionarios = cursor.fetchall()
     return render_template('listar-funcionarios.html',funcionarios=funcionarios)
 
+
+@app.route('/listagem')
+@login_required
+def listagem():
+    return render_template('listagem.html')
+
 @app.route('/listar-pacientes')
+@login_required
 def listarPacientes():
     cursor = connection.cursor()
     query = "SELECT * FROM PACIENTE"
@@ -254,185 +349,82 @@ def listarPacientes():
     return render_template('listar-pacientes.html',pacientes=pacientes)
 
 @app.route('/listar-enderecos')
+@login_required
 def listarEnderecos():
     cursor = connection.cursor()
     query = "SELECT * FROM ENDERECOS"
     cursor.execute(query)
     enderecos = cursor.fetchall()
+
     return render_template('listar-enderecos.html',enderecos=enderecos)
 
-
-
-
-# Observar os candidatos cadastrados
-@app.route('/visualizarCandidatos')
-def verCandidato():
+@app.route('/listar-agendamentos')
+def listarAgendamento():
     cursor = connection.cursor()
-    query = "SELECT cpf,nome,funcao,situacao FROM candidato"
+    query = "SELECT * FROM AGENDA"
     cursor.execute(query)
-    candidatos = cursor.fetchall()
-    return render_template('visualizarCandidatos.html',candidatos=candidatos)
+    agendamentos = cursor.fetchall()
 
-# def atualizar_status_aprovado(cpf)://
-@app.route('/visualizarCandidatos', methods=['POST'])
-def index_post_visualizar():
-    cpf = request.form['cpf']
+    return render_template('listar-agendamentos.html',agendamentos=agendamentos)
+
+@app.route('/listar-agendamento-funcionario')
+@login_required
+def listarAgendamentoFuncionario():
     cursor = connection.cursor()
-    sql = "UPDATE candidato SET situacao = 'Aprovado' WHERE cpf = %s"
-    cursor.execute(sql, (cpf,))
-    connection.commit()
-    return verCandidato()
-
-# Observar os reports cadastrados
-@app.route('/visualizarReports')
-def verReports():
-    cursor = connection.cursor()
-    query = "SELECT nome,centro_custo,referencia_atuacao,descricao FROM reports"
-    cursor.execute(query)
-    reports = cursor.fetchall()
-    return render_template('visualizarReports.html',reports=reports)
+    codigo = current_user.id
+    query = "SELECT crm FROM FUNCIONARIO WHERE codigo = %s"
+    valores = (codigo,)
+    cursor.execute(query,valores)
+    crm = cursor.fetchone()
     
-# Renderizar o página de cadastro de area
-@app.route('/cadastroArea')
-def index_area():
-        return render_template('cadastroAreas.html')
+    if crm:
+        query = "SELECT * FROM AGENDA WHERE codigomedico = %s"
+        valores = (codigo,)
+        cursor.execute(query,valores)
+        agendamentos = cursor.fetchall()
 
-# Obter os valores do form da página de cadastro de área
-@app.route('/cadastroArea', methods=['POST'])
-def cadastrarArea():
-    # Pasta que ficará os pdfs
-    app.config['UPLOAD_FOLDER'] = 'static\\arquivos\\area'
-    uploaded_files = request.files
-    file_paths = {}
+    return render_template('listar-agendamentos.html',agendamentos=agendamentos)
 
-    for field_name, file in uploaded_files.items():
-        # Verifica se o arquivo existe e se sua extensão é permitida
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)  # Garante um nome de arquivo seguro
-            file_path = os.path.join(filename)  # Constrói o caminho completo de destino
+@login_manager.user_loader
+def load_user(user_id):
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM FUNCIONARIO WHERE codigo = %s", (user_id,))
+    user_data = cursor.fetchone()
 
-            file.save(file_path)  # Salva o arquivo no servidor
-            file_paths[field_name] = file_path  # Armazena o caminho do arquivo no dicionário
-            comprimir_pdf(file_path)
-
-    #inserir na tabela area
-    #--------------------------------------------------
-    codigo = request.form['codigo']
-    descricao = request.form['descricao']
-    status = request.form['status']
-    anexo = request.form.getlist('anexo')
-    
-
-    query = "INSERT INTO cadastroAE (codArea,descArea,statusLiberacao,caminho_anexo) VALUES (%s, %s, %s, %s)"
-
-    values = (codigo,descricao,status,file_paths.get('anexo'))
-    cursor = connection.cursor()
-    cursor.execute(query, values)
-    connection.commit()
-
-    # kt.sendwhatmsg_instantly("+5531984306223","Cadastro Realizado",15)
-
-    return render_template('cadastroAreas.html')
-    
-    
-# Renderizar o página de cadastro de area
-@app.route('/solicitacoes')
-def index_req():
-        return render_template('solicitacoes.html')
-
-@app.route('/solicitacoes', methods=['POST'])
-def cadastrarReq():
-
-    #inserir na tabela requisicao
-    #--------------------------------------------------
-    cpf_func = request.form['cpf']
-    tipo = request.form['tipo-req']
-    data = request.form['data']
-    
-
-    query = "INSERT INTO requisicoes (cpf_func,tipo,data_agen) VALUES (%s, %s,%s)"
-
-    values = (cpf_func,tipo,data)
-    cursor = connection.cursor()
-    cursor.execute(query, values)
-    connection.commit()
-
-    return index_req()
-
-# Observar os candidatos cadastrados
-@app.route('/visualizarRequisicoes')
-def verRequisicoes():
-    cursor = connection.cursor()
-    query = "SELECT cpf_func,tipo,data_agen,status_req FROM requisicoes"
-    cursor.execute(query)
-    requisicoes = cursor.fetchall()
-    return render_template('visualizarRequisicoes.html',requisicoes=requisicoes)
-    
-
-@app.route('/visualizarRequisicoes', methods=['POST'])
-def index_Requisicoes():
-    cpf = request.form['cpf']
-    tipo = request.form['tipo']
-    status = request.form['aprovar_func']
-    cursor = connection.cursor()
-    if tipo == 'Rescisao':
-        opcao = request.form['opcao']
-        avaliacao = request.form['avaliacao']
-        sql = "UPDATE requisicoes SET status_req = %s,opcao = %s,avaliacao = %s WHERE cpf_func = %s"
-        cursor.execute(sql, (status, opcao, avaliacao, cpf,))
-    else :
-        sql = "UPDATE requisicoes SET status_req = %s WHERE cpf_func = %s"
-        cursor.execute(sql, (status,cpf,))
-
-    connection.commit()
-    return verRequisicoes()
-
-
-# Observar os candidatos cadastrados
-@app.route('/portalInterno/visualizarAreas')
-def verAreas():
-    cursor = connection.cursor()
-    query = "SELECT * FROM cadastroAE"
-    cursor.execute(query)
-    areas = cursor.fetchall()
-    return render_template('visualizarAreasEquipamentos.html',areas=areas)
-
-@app.route('/visualizarAreas', methods=['POST'])
-def verArea():
-    cursor = connection.cursor()
-    query = "SELECT * FROM cadastroAE"
-    cursor.execute(query)
-    areas = cursor.fetchall()
-    return render_template('visualizarAreaEquipamento.html',areas=areas)
-    
-
-@app.route('/area/<codArea>')
-def area(codArea):
-    cursor = connection.cursor()
-    query = "SELECT * FROM cadastroAE"
-    cursor.execute(query)
-    areas = cursor.fetchall()
-
-    caminho_pdf = "file:///C:/Users/Pedro/OneDrive/Documents/Programming/HackathonItauna/HackathonItauna"
-    
-    area_data = None
-    for area in areas:
-        if area[0] == codArea:  # Assumindo que o primeiro campo é o codArea
-            area_data = {
-                "codArea": area[0],
-                "descArea": area[1],
-                "statusLiberacao": area[2],
-                "caminho_anexo": caminho_pdf + "/" + area[3]
-            }
-            break
-    
-    if area_data:
-        pdf_path = os.path.join(app.static_folder, "pdfs", area_data["caminho_anexo"])
-        return render_template('paginaAreaEquipamento.html', area=area_data, pdf_path=pdf_path)
+    if user_data:
+        user = Usuario(user_id=user_data['codigo'], email=user_data['email'])
+        return user
     else:
-        return "Área não encontrada!"
+        return None
 
-        
-@app.route('/portalInterno')
-def index_portal_interno():
-    return render_template('portalInterno.html')
+# Renderizar página de login
+@app.route('/login')
+def index_login():
+    return render_template('login.html')
+
+# Verificar log
+@app.route('/login', methods=['POST'])
+def logar():
+    email = request.form['email']
+    senhahash = request.form['senhahash']
+
+    query = "SELECT codigo FROM FUNCIONARIO WHERE email = %s and senhahash = %s"
+    valores_usuario = (email, senhahash)
+
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(query, valores_usuario)
+    user = cursor.fetchone()
+
+    if user:
+        usuario = Usuario(user['codigo'], email)
+        login_user(usuario)
+        return redirect(url_for('index_home'))  
+    else:
+        return jsonify({'message': 'Email ou senha incorretos'}), 401
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index_home')) 
+

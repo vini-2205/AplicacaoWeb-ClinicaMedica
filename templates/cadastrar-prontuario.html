@@ -29,30 +29,43 @@
             <img src="../static/imgs/logo.png" class="imagem">
         </a>
         <nav class="itens"> <!-- Barra de navegação responsiva -->
-            <a href="./home.html" class="nav-link">Home</a>
+            <a href="./" class="nav-link">Home</a>
 
-            <a href="./galeria.html" class="nav-link">Fotos</a>
+            <a href="./galeria" class="nav-link">Fotos</a>
 
-            <a href="./cadastrar-endereco.html" class="nav-link">Endereços</a>
+            <a href="./cadastrar-endereco" class="nav-link">Endereços</a>
 
-            <a href="./agendar-consulta.html" class="nav-link">Consultas</a>
+            <a href="./agendar-consulta" class="nav-link">Consultas</a>
 
-            <a href="./cadastrar-prontuario.html" class="nav-link">Prontuários</a>
+            {% if current_user.is_authenticated %}
+            <a href="./cadastrar-prontuario" class="nav-link">Prontuários</a>
 
-            <a href="./cadastrar-funcionario.html" class="nav-link">Cadastro Funcionário</a>
+            <a href="./cadastrar-funcionario" class="nav-link">Cadastro Funcionário</a>
 
-            <a href="./cadastrar-paciente.html" class="nav-link">Cadastro Paciente</a>
+            <a href="./cadastrar-paciente" class="nav-link">Cadastro Paciente</a>
 
-            <a href="./listagem.html" class="nav-link">Listagens</a>
+            <a href="./listagem" class="nav-link">Listagens</a>
 
-            <a href="./login.html" class="nav-link">Login</a>
+            <a href="./logout" class="nav-link">Logout</a>
+            {% endif %}
+
+            {% if not current_user.is_authenticated %}
+            <a href="./login" class="nav-link">Login</a>
+            {% endif %}
         </nav>
     </header>
     <div class="principal">
-        <form method="post" action="/cadastrar-prontuario" id="uploadForm" enctype="multipart/form-data">
+        <form method="post" action="/preencher-prontuario" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
                 <h2 class="subtitulo">Cadastro de Prontuário Eletrônico do Paciente:</h2>
                 <hr width="100%" noshade="">
+                <label for="paciente">Paciente*:</label><br>
+                <select name="paciente" placeholder="Escolher..." >
+                    <option value="" disabled selected hidden>Selecione um paciente</option>
+                    {% for paciente in pacientes %}
+                        <option value="{{ paciente }}">{{ paciente }}</option>
+                    {% endfor %}
+                </select></p>
                 <label for="anamnese">Registro de anamnese, exame objetivo e variáveis clínicas*:</label><br>
                 <input type="text" name="anamnese" autocomplete="off" placeholder="Digite a avaliação médica" ><br><br>
                 <label for="medicamento">Prescrição de medicamentos/métodos terapêuticos*:</label><br>

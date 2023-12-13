@@ -29,48 +29,139 @@
             <img src="../static/imgs/logo.png" class="imagem">
         </a>
         <nav class="itens"> <!-- Barra de navegação responsiva -->
-            <a href="./home.html" class="nav-link">Home</a>
+            <a href="./" class="nav-link">Home</a>
 
-            <a href="./galeria.html" class="nav-link">Fotos</a>
+            <a href="./galeria" class="nav-link">Fotos</a>
 
-            <a href="./cadastrar-endereco.html" class="nav-link">Endereços</a>
+            <a href="./cadastrar-endereco" class="nav-link">Endereços</a>
 
-            <a href="./agendar-consulta.html" class="nav-link">Consultas</a>
+            <a href="./agendar-consulta" class="nav-link">Consultas</a>
 
-            <a href="./cadastrar-prontuario.html" class="nav-link">Prontuários</a>
+            {% if current_user.is_authenticated %}
+            <a href="./cadastrar-prontuario" class="nav-link">Prontuários</a>
 
-            <a href="./cadastrar-funcionario.html" class="nav-link">Cadastro Funcionário</a>
+            <a href="./cadastrar-funcionario" class="nav-link">Cadastro Funcionário</a>
 
-            <a href="./cadastrar-paciente.html" class="nav-link">Cadastro Paciente</a>
+            <a href="./cadastrar-paciente" class="nav-link">Cadastro Paciente</a>
 
-            <a href="./listagem.html" class="nav-link">Listagens</a>
+            <a href="./listagem" class="nav-link">Listagens</a>
 
-            <a href="./login.html" class="nav-link">Login</a>
+            <a href="./logout" class="nav-link">Logout</a>
+            {% endif %}
+
+            {% if not current_user.is_authenticated %}
+            <a href="./login" class="nav-link">Login</a>
+            {% endif %}
         </nav>
     </header>
     <div class="principal">
-        <form method="post" action="/agendar consulta" id="uploadForm" enctype="multipart/form-data">
+        <form method="post" action="/agendar-consulta" id="uploadForm" enctype="multipart/form-data">
             <div class="campos">
                 <h2 class="subtitulo">Agendamento de Consulta:</h2>
                 <hr width="100%" noshade="">
                 <label for="especialidade">Especialidade médica desejada*:</label><br>
                 <select name="especialidade" placeholder="Escolher..." >
-                    <option value="" disabled selected>Escolher...</option>
+                    <option value="" disabled selected hidden>Escolha uma especialidade</option>
+                    {% for especialidade in especialidades %}
+                        <option value="{{ especialidade }}">{{ especialidade }}</option>
+                    {% endfor %}
                 </select></p>
                 <label for="medico">Nome do médico especialista*:</label><br>
                 <select name="medico" placeholder="Escolher..." >
                     <option value="" disabled selected>Escolher...</option>
                 </select></p>  
+                <button type="button" onclick="buscarMedicos(event)">Buscar Médicos</button><br><br>
                 <label for="data">Data da consulta:</label>
                 <input type="date" name="data"></p>  
+                <button type="button" onclick="buscarHorarios(event)">Buscar Horarios</button><br><br>
                 <label for="horario">Horário da consulta*:</label><br>
                 <select name="horario" placeholder="Escolher..." >
                     <option value="" disabled selected>Escolher...</option>
-                </select></p>           
+                </select></p>
+                <label for="nome">Nome do paciente:</label>
+                <input type="text" name="nome"></p>          
+                <label for="email">Email:</label>
+                <input type="text" name="email"></p>  
+                <label for="telefone">Telefone:</label>
+                <input type="text" name="telefone"></p>     
             </div>
             <input type="submit" value="Enviar">
         </form>
     </div>  
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        function buscarMedicos(event) {
+            event.preventDefault();
+            var especialidadeSelecionada = document.getElementsByName('especialidade')[0];
+
+            if (especialidadeSelecionada) {
+                especialidadeSelecionada = especialidadeSelecionada.value;
+                // Realiza uma requisição AJAX para a rota que busca os médicos usando Axios
+                axios.post('/api/busca_medicos', { especialidade: especialidadeSelecionada })
+                    .then(function (response) {
+                        var data = response.data;
+
+                        if (data.success && data.medicos) {
+                            var selectMedico = document.getElementsByName('medico')[0];
+
+                            // Limpa as opções anteriores
+                            selectMedico.innerHTML = '<option value="" disabled selected>Escolher...</option>';
+
+                            // Adiciona as novas opções
+                            data.medicos.forEach(function (medico) {
+                                var option = document.createElement('option');
+                                option.value = medico;
+                                option.textContent = medico;
+                                selectMedico.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Erro na requisição:', error);
+                    });
+            }
+        }
+    </script>
+
+
+    <script>
+        function buscarHorarios(event) {
+            event.preventDefault();
+            var dataSelecionada = document.getElementsByName('data')[0];
+            var medicoSelecionado = document.getElementsByName('medico')[0];
+
+            if (dataSelecionada && medicoSelecionado) {
+                dataSelecionada = dataSelecionada.value;
+                medicoSelecionado = medicoSelecionado.value;
+                // Realiza uma requisição AJAX para a rota que busca os médicos usando Axios
+                axios.post('/api/busca_horario', { data: dataSelecionada , medico: medicoSelecionado})
+                    .then(function (response) {
+                        var data = response.data;
+
+                        if (data.success && data.horarios) {
+                            var selectHorarios = document.getElementsByName('horario')[0];
+
+                            // Limpa as opções anteriores
+                            selectHorarios.innerHTML = '<option value="" disabled selected>Escolher...</option>';
+
+                            // Adiciona as novas opções
+                            data.horarios.forEach(function (horario) {
+                                var option = document.createElement('option');
+                                option.value = horario;
+                                option.textContent = horario;
+                                selectHorarios.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Erro na requisição:', error);
+                    });
+            }
+        }
+    </script>
 </body>
 
 </html>
