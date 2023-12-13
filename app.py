@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, login_required, login_user, current_user, logout_user
-#from PyPDF2 import PdfReader, PdfWriter
 from werkzeug.utils import secure_filename
 import os
 from bancoDeDados import connection
 from obter_localizacao import obter_localizacao
-#import pywhatkit as kt
 import pyautogui as pg
 
 app = Flask(__name__)
